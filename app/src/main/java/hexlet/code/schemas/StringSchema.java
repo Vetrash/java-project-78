@@ -1,24 +1,21 @@
 package hexlet.code.schemas;
 
-public final class StringSchema extends BaseSchema {
 
-    public StringSchema() {
-        addCheck(o -> o instanceof String);
-    }
-
-    public StringSchema contains(String str) {
-        addCheck(o -> ((String) o).contains(str));
-        return this;
-    }
-
-    public StringSchema minLength(int length) {
-        addCheck(o -> ((String) o).length() >= length);
-        return this;
-    }
+public final class StringSchema extends BaseSchema<String> {
 
     public StringSchema required() {
-        addCheck(o -> !((String) o).isEmpty());
-        setOptional(false);
+        addCheckFirst(SchemaChecks.REQUIRED, s -> s != null && !s.isEmpty());
         return this;
     }
+
+    public StringSchema minLength(int min) {
+        addCheck(SchemaChecks.MIN_LENGTH, s -> s.length() >= min);
+        return this;
+    }
+
+    public StringSchema contains(String substring) {
+        addCheck(SchemaChecks.CONTAINS, s -> s.contains(substring));
+        return this;
+    }
+
 }
