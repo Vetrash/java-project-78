@@ -1,4 +1,4 @@
-name: SonarQube
+name: SonarQube2
 on:
   push:
     branches:
@@ -33,4 +33,4 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar --info
+        run: ./app/gradlew build sonar -p ./app --info
