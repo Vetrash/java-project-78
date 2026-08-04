@@ -13,6 +13,10 @@ class StringSchemaTest {
     private StringSchema schema;
     private Validator v = new Validator();
 
+    private final int num5 = 5;
+    private final int num7 = 7;
+
+
     @BeforeEach
     void reset() {
         this.schema = v.string();
@@ -26,7 +30,7 @@ class StringSchemaTest {
         assertTrue(schema.isValid("what does the fox say"));
         assertTrue(schema.isValid("hexlet"));
         assertFalse(schema.isValid(null));
-        assertFalse(schema.isValid(5));
+        assertFalse(schema.isValid(num5));
         assertFalse(schema.isValid(""));
     }
 
@@ -42,7 +46,7 @@ class StringSchemaTest {
     void setMinLength() {
         assertTrue(schema.isValid("what does the fox say"));
         assertTrue(schema.isValid("hexlet"));
-        schema.minLength(7);
+        schema.minLength(num7);
         assertTrue(schema.isValid("what does the fox say"));
         assertFalse(schema.isValid("hexlet"));
     }

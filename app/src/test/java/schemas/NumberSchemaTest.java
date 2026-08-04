@@ -12,6 +12,12 @@ class NumberSchemaTest {
     private NumberSchema schema;
     private Validator v = new Validator();
 
+    private final int num5 = 5;
+    private final int num10 = 10;
+    private final int num11 = 11;
+    private final int num7 = 7;
+    private final int numneg7 = -7;
+
     @BeforeEach
     void preset() {
         this.schema = v.number();
@@ -19,13 +25,13 @@ class NumberSchemaTest {
 
     @Test
     void range() {
-        schema.range(5, 10);
-        assertTrue(schema.isValid(7));
-        assertTrue(schema.isValid(5));
-        assertTrue(schema.isValid(10));
+        schema.range(num5, num10);
+        assertTrue(schema.isValid(num7));
+        assertTrue(schema.isValid(num5));
+        assertTrue(schema.isValid(num10));
         assertFalse(schema.isValid(0));
         assertFalse(schema.isValid(null));
-        assertFalse(schema.isValid(11));
+        assertFalse(schema.isValid(num11));
     }
 
     @Test
@@ -36,18 +42,18 @@ class NumberSchemaTest {
 
     @Test
     void positive() {
-        assertTrue(schema.isValid(-7));
+        assertTrue(schema.isValid(numneg7));
         schema.positive();
-        assertFalse(schema.isValid(-7));
+        assertFalse(schema.isValid(numneg7));
         assertFalse(schema.isValid(0));
-        assertTrue(schema.isValid(7));
+        assertTrue(schema.isValid(num7));
     }
 
     @Test
     void isValid() {
         assertTrue(schema.isValid(null));
-        assertTrue(schema.isValid(7));
+        assertTrue(schema.isValid(num7));
         assertTrue(schema.isValid(0));
-        assertTrue(schema.isValid(-7));
+        assertTrue(schema.isValid(numneg7));
     }
 }
