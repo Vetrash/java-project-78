@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 
 public abstract class BaseSchema<T> {
     private LinkedHashMap<SchemaChecks, Predicate<T>> checks = new LinkedHashMap<>();
+    private boolean isRequired = false;
 
     /**
      * Adds a validation check to the schema.
@@ -31,7 +32,7 @@ public abstract class BaseSchema<T> {
      * @param predicate the validation predicate
      */
     public void addCheckFirst(SchemaChecks checkName, Predicate<T> predicate) {
-        LinkedHashMap<SchemaChecks, Predicate<T>> newChecks = new LinkedHashMap<>();
+        Map<SchemaChecks, Predicate<T>> newChecks = new LinkedHashMap<>();
         newChecks.put(checkName, predicate);
         newChecks.putAll(this.checks);
         this.checks = newChecks;

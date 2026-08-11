@@ -1,7 +1,6 @@
 plugins {
     //id("java")
     id("com.github.ben-manes.versions") version "0.53.0"
-    application
     checkstyle
     jacoco
     id("org.sonarqube") version "7.2.3.7755"

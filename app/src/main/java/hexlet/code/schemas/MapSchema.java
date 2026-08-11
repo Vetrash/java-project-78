@@ -5,19 +5,18 @@ import java.util.Objects;
 import java.util.HashMap;
 
 public final class MapSchema extends BaseSchema<Map<String, String>> {
-    private Map<String, BaseSchema<String>> schemas = new HashMap<>();
 
     @Override
     public boolean isValid(Map<String, String> value) {
         var result = super.isValid(value);
-        if (result && !schemas.isEmpty()) {
+        if (result && !checks.isEmpty()) {
             result = value.keySet()
                     .stream()
                     .allMatch(k -> {
-                        if (!schemas.containsKey(k)) {
+                        if (!checks.containsKey(k)) {
                             return true;
                         }
-                        return schemas.get(k).isValid(value.get(k));
+                        return checks.get(k).isValid(value.get(k));
                     });
         }
         return result;
