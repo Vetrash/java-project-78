@@ -2,21 +2,20 @@ package hexlet.code.schemas;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.HashMap;
 
 public final class MapSchema extends BaseSchema<Map<String, String>> {
 
     @Override
     public boolean isValid(Map<String, String> value) {
         var result = super.isValid(value);
-        if (result && !checks.isEmpty()) {
+        if (result && !getChecks().isEmpty()) {
             result = value.keySet()
                     .stream()
                     .allMatch(k -> {
-                        if (!checks.containsKey(k)) {
+                        if (!getChecks().containsKey(k)) {
                             return true;
                         }
-                        return checks.get(k).isValid(value.get(k));
+                        return getChecks().get(k).test(value);
                     });
         }
         return result;
@@ -31,8 +30,21 @@ public final class MapSchema extends BaseSchema<Map<String, String>> {
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema<String>> newSchemas) {
-        this.schemas = new HashMap<>(newSchemas);
+    public MapSchema shape(Map<String, BaseSchema<String>> schemas) {
+        addCheck(SchemaChecks.SHAPE, (map) -> {
+            if (map == null) {
+                return true; // или false, в зависимости от требований
+            }
+
+            return schemas.entrySet().stream()
+                    .allMatch(entry -> {
+                        String key = entry.getKey();
+                        BaseSchema<String> schema = entry.getValue();
+                        Object value = map.get(key);
+                        return schema.isValid((String) value);
+                    });
+        });
+
         return this;
     }
 }

@@ -6,5 +6,6 @@ public enum SchemaChecks {
     CONTAINS,
     POSITIVE,
     RANGE,
-    SIZE
+    SIZE,
+    SHAPE
 }

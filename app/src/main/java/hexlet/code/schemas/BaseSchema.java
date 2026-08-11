@@ -2,12 +2,21 @@ package hexlet.code.schemas;
 
 import java.util.function.Predicate;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 
 public abstract class BaseSchema<T> {
-    private LinkedHashMap<SchemaChecks, Predicate<T>> checks = new LinkedHashMap<>();
-    private boolean isRequired = false;
+    private Map<SchemaChecks, Predicate<T>> checks = new LinkedHashMap<>();
+    private  boolean isRequired = false;
+
+    public final boolean getIsRequired() {
+        return isRequired;
+    }
+
+    public final Map<SchemaChecks, Predicate<T>> getChecks() {
+        return checks;
+    }
 
     /**
      * Adds a validation check to the schema.

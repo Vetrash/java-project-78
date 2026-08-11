@@ -1,10 +1,9 @@
 plugins {
-    //id("java")
+    id("java")
     id("com.github.ben-manes.versions") version "0.53.0"
     checkstyle
     jacoco
     id("org.sonarqube") version "7.2.3.7755"
-
 }
 
 dependencyLocking {
@@ -33,10 +32,6 @@ dependencies {
     testImplementation("org.assertj:assertj-core:$assertjVersion")
 }
 
-application { mainClass.set("hexlet.code.App") }
-
-
-
 sonar {
     properties {
         property("sonar.projectKey", "Vetrash_java-project-78")
@@ -50,12 +45,7 @@ jacoco {
 
 tasks.test {
     useJUnitPlatform()
-
     finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.getByName("run", JavaExec::class) {
-    standardInput = System.`in`
 }
 
 tasks.jacocoTestReport {
@@ -66,7 +56,7 @@ tasks.jacocoTestReport {
         csv.required.set(false)
     }
 }
+
 tasks.jacocoTestCoverageVerification {
     dependsOn(tasks.jacocoTestReport)
 }
-
