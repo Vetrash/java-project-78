@@ -60,6 +60,9 @@ public abstract class BaseSchema<T> {
      * @return true if all checks pass, false otherwise
      */
     public boolean isValid(T value) {
+        if (!getHasRequired() && value == null) {
+            return true;
+        }
         return checks.stream()
                 .map(Map.Entry::getValue)
                 .allMatch(predicate -> predicate.test(value));
