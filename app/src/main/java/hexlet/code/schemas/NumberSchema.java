@@ -5,13 +5,12 @@ public final class NumberSchema extends BaseSchema<Integer> {
 
     @Override
     public NumberSchema required() {
-
         addCheckFirst(SchemaChecks.REQUIRED, Objects::nonNull);
         return this;
     }
 
     public NumberSchema positive() {
-        addCheck(SchemaChecks.POSITIVE, this.getIsRequired()
+        addCheck(SchemaChecks.POSITIVE, this.getHasRequired()
                 ? s -> s > 0
                 : s -> s == null || s > 0);
         return this;

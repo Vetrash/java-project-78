@@ -2,6 +2,7 @@ package hexlet.code.schemas;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public final class MapSchema extends BaseSchema<Map<String, String>> {
 
@@ -9,17 +10,20 @@ public final class MapSchema extends BaseSchema<Map<String, String>> {
     public boolean isValid(Map<String, String> value) {
         var result = super.isValid(value);
         if (result && !getChecks().isEmpty()) {
-            result = value.keySet()
-                    .stream()
-                    .allMatch(k -> {
-                        if (!getChecks().containsKey(k)) {
-                            return true;
-                        }
-                        return getChecks().get(k).test(value);
-                    });
+            for (Map.Entry<SchemaChecks, Predicate<Map<String, String>>> entry : getChecks()) {
+
+                SchemaChecks key = entry.getKey();
+                if (value.containsKey(key.name())) {
+                    if (!entry.getValue().test(value)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         return result;
     }
+
     public MapSchema sizeof(int minSize) {
         addCheck(SchemaChecks.SIZE, s -> s.size() == minSize);
         return this;

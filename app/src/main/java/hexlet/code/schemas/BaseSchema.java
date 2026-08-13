@@ -1,21 +1,22 @@
 package hexlet.code.schemas;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.function.Predicate;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 
 
 public abstract class BaseSchema<T> {
-    private Map<SchemaChecks, Predicate<T>> checks = new LinkedHashMap<>();
-    private  boolean isRequired = false;
+    private Deque<Map.Entry<SchemaChecks, Predicate<T>>> checks = new ArrayDeque<>();
 
-    public final boolean getIsRequired() {
-        return isRequired;
+    public final boolean getHasRequired() {
+        return checks.stream()
+                .anyMatch(entry -> entry.getKey().equals(SchemaChecks.REQUIRED));
     }
 
-    public final Map<SchemaChecks, Predicate<T>> getChecks() {
-        return checks;
+    public final  Deque<Map.Entry<SchemaChecks, Predicate<T>>>  getChecks() {
+        return  checks;
     }
 
     /**
@@ -29,7 +30,10 @@ public abstract class BaseSchema<T> {
      * @param predicate the validation predicate
      */
     public void addCheck(SchemaChecks checkName, Predicate<T> predicate) {
-        checks.put(checkName, predicate);
+        // Удаляем существующую запись с таким же ключом
+        checks.removeIf(entry -> entry.getKey().equals(checkName));
+        // Добавляем в конец
+        checks.addLast(Map.entry(checkName, predicate));
     }
 
     /**
@@ -41,11 +45,9 @@ public abstract class BaseSchema<T> {
      * @param predicate the validation predicate
      */
     public void addCheckFirst(SchemaChecks checkName, Predicate<T> predicate) {
-        Map<SchemaChecks, Predicate<T>> newChecks = new LinkedHashMap<>();
-        newChecks.put(checkName, predicate);
-        newChecks.putAll(this.checks);
-        this.checks = newChecks;
+        checks.addFirst(Map.entry(checkName, predicate));
     }
+
 
     /**
      * Validates the value against all registered checks.
@@ -58,8 +60,9 @@ public abstract class BaseSchema<T> {
      * @return true if all checks pass, false otherwise
      */
     public boolean isValid(T value) {
-        return checks.values().stream().allMatch(predicate -> predicate.test(value));
+        return checks.stream()
+                .map(Map.Entry::getValue)
+                .allMatch(predicate -> predicate.test(value));
     }
-
     public abstract BaseSchema<T> required();
 }
